@@ -20,13 +20,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Component
 public class KafkaConsumer {
 
-    private static CopyOnWriteArrayList<String> messageList = new CopyOnWriteArrayList<>();
+    private static CopyOnWriteArrayList<JSONObject> messageList = new CopyOnWriteArrayList<>();
 
     @KafkaListener(topics = {"test01", "test02"}) //监听的topic：test01、test02
     public void consume(ConsumerRecord<String, String> consumerRecord, Acknowledgment acknowledgment) {
         if (!ObjectUtils.isEmpty(consumerRecord)) {
             String message = consumerRecord.value();
-            messageList.add(message);
+            messageList.add(JSONObject.parseObject(message));
         }
         if (messageList.size() >= 5) {
             log.info("messageList:{}", JSONObject.toJSONString(messageList));

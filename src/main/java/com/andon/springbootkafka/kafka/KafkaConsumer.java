@@ -24,10 +24,12 @@ public class KafkaConsumer {
 
     private static CopyOnWriteArrayList<JSONObject> messageList = new CopyOnWriteArrayList<>();
 
-    @KafkaListener(topicPartitions = { //配置topic和分区：监听两个topic: test02、topic04
-            @TopicPartition(topic = "${kafka.topic.test02}", partitions = {"0", "2"}), //test02只接收分区0，2的消息
-            @TopicPartition(topic = "topic04", partitions = "0", partitionOffsets = @PartitionOffset(partition = "2", initialOffset = "5")) //topic04接收分区0和分区2的消息，但是分区1的消费者初始位置为5
-    })
+    @KafkaListener(
+            id = "consume1", //id是消费者监听容器
+            topicPartitions = { //配置topic和分区：监听两个topic: test02、topic04
+                    @TopicPartition(topic = "${kafka.topic.test02}", partitions = {"0", "2"}), //test02只接收分区0，2的消息
+                    @TopicPartition(topic = "topic04", partitions = {"0", "2"}, partitionOffsets = @PartitionOffset(partition = "4", initialOffset = "5")) //topic04接收分区0,2,4的消息，但是分区5的消费者初始位置为5
+            })
     public void consume(ConsumerRecord<String, String> consumerRecord, Acknowledgment acknowledgment) {
         if (!ObjectUtils.isEmpty(consumerRecord)) {
             String message = consumerRecord.value();
@@ -42,10 +44,12 @@ public class KafkaConsumer {
         }
     }
 
-    @KafkaListener(topicPartitions = { //配置topic和分区：监听两个topic: test02、topic04
-            @TopicPartition(topic = "${kafka.topic.test02}", partitions = {"1", "3"}), //test02只接收分区1，3的消息
-            @TopicPartition(topic = "topic04", partitions = "1", partitionOffsets = @PartitionOffset(partition = "3", initialOffset = "4")) //topic04接收分区1和分区3的消息，但是分区1的消费者初始位置为5
-    })
+    @KafkaListener(
+            id = "consume2", //id是消费者监听容器
+            topicPartitions = { //配置topic和分区：监听两个topic: test02、topic04
+                    @TopicPartition(topic = "${kafka.topic.test02}", partitions = {"1", "3"}), //test02只接收分区1，3的消息
+                    @TopicPartition(topic = "topic04", partitions = {"1", "3"}, partitionOffsets = @PartitionOffset(partition = "5", initialOffset = "5")) //topic04接收分区1,3,5的消息，但是分区5的消费者初始位置为5
+            })
     public void consume2(ConsumerRecord<String, String> consumerRecord, Acknowledgment acknowledgment) {
         if (!ObjectUtils.isEmpty(consumerRecord)) {
             String message = consumerRecord.value();
@@ -60,7 +64,10 @@ public class KafkaConsumer {
         }
     }
 
-    @KafkaListener(topics = {"${kafka.topic.test01}", "test03"}) //监听的topic：test01、test03
+    @KafkaListener(
+            id = "consumeTopicTest01", //id是消费者监听容器
+            topics = {"${kafka.topic.test01}", "test03"} //监听的topic：test01、test03
+    )
     public void consumeTopicTest01(ConsumerRecord<String, String> consumerRecord, Acknowledgment acknowledgment) {
         if (!ObjectUtils.isEmpty(consumerRecord)) {
             String message = consumerRecord.value();

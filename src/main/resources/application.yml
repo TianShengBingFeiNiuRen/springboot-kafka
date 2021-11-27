@@ -26,3 +26,8 @@ spring:
       missing-topics-fatal: false
       # 手动提交偏移量的ackMode方式
       ack-mode: manual_immediate
+
+kafka:
+  topic:
+    test01: test01
+    test02: test02

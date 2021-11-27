@@ -25,7 +25,7 @@ public class DatabaseTest {
     public void test02() {
         String topic = "test02";
         String message;
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 100; i++) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(String.valueOf(i), new Date().toString());
             message = JSONObject.toJSONString(jsonObject);
